@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Optional } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AddressFinder } from 'src/domain/address-finder.provider';
 import { Address } from 'src/domain/address.value-object';
+import { CepNotFoundError } from 'src/infra/errors/infra.error';
 
 export interface BrasilApiResponseDTO {
   cep: string;
@@ -23,17 +25,14 @@ export class BrasilApiAddressFinder implements AddressFinder {
 
   async find(cep: string): Promise<Address> {
     try {
-      console.log(`Trying to find cep ${cep} on API ${this.getName()}.`);
       const { data } = await firstValueFrom(
         this.httpService.get<BrasilApiResponseDTO>(
           `https://brasilapi.com.br/api/cep/v1/${cep}`,
         ),
       );
-      // TODO: Tratar erros de retorno da api
       return this.mapToAddress(data);
     } catch (error) {
-      console.log('There was an error finding cep...');
-      if (!this.next) throw error;
+      if (!this.next) throw new CepNotFoundError(cep);
       return this.next.find(cep);
     }
   }

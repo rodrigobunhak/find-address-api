@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Optional } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AddressFinder } from 'src/domain/address-finder.provider';
 import { Address } from 'src/domain/address.value-object';
+import { CepNotFoundError } from 'src/infra/errors/infra.error';
 
 export interface ViaCepResponseDTO {
   cep?: string;
@@ -35,7 +37,6 @@ export class ViaCepAddressFinder implements AddressFinder {
 
   async find(cep: string): Promise<Address> {
     try {
-      console.log(`Trying to find cep ${cep} on API ${this.getName()}.`);
       const { data } = await firstValueFrom(
         this.httpService.get<ViaCepResponseDTO>(
           `https://viacep.com.br/ws/${cep}/json/`,
@@ -44,11 +45,9 @@ export class ViaCepAddressFinder implements AddressFinder {
       if (data.erro) {
         throw new Error();
       }
-      // TODO: Tratar erros de retorno da api
       return this.mapToAddress(data);
     } catch (error) {
-      console.log('There was an error finding cep...');
-      if (!this.next) throw error;
+      if (!this.next) throw new CepNotFoundError(cep);
       return this.next.find(cep);
     }
   }

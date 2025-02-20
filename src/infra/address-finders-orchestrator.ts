@@ -13,6 +13,7 @@ export class AddressFinderOrchestrator {
   }
 
   private buildChain(finders: AddressFinder[]): AddressFinder {
+    finders.forEach((finder) => (finder.next = undefined));
     for (let i = 0; i < finders.length - 1; i++) {
       finders[i].next = finders[i + 1];
     }
