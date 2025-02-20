@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { IAddressProvider } from 'src/domain/address.provider';
+import { AddressFinder } from 'src/domain/address-finder.provider';
 import { Address } from 'src/domain/address.value-object';
 
 export interface BrasilApiResponseDTO {
@@ -14,18 +14,32 @@ export interface BrasilApiResponseDTO {
 }
 
 @Injectable()
-export class BrasilApiAdapter implements IAddressProvider {
-  constructor(private readonly httpService: HttpService) {}
+export class BrasilApiAddressFinder implements AddressFinder {
+  constructor(
+    private readonly httpService: HttpService,
+    @Optional()
+    readonly next?: AddressFinder,
+  ) {}
 
-  async getAddressByCep(cep: string): Promise<Address | null> {
-    console.log('BrasilApi call...');
-    const { data } = await firstValueFrom(
-      this.httpService.get<BrasilApiResponseDTO>(
-        `https://brasilapi.com.br/api/cep/v1/${cep}`,
-      ),
-    );
-    // TODO: Tratar erros de retorno da api
-    return this.mapToAddress(data);
+  async find(cep: string): Promise<Address> {
+    try {
+      console.log(`Trying to find cep ${cep} on API ${this.getName()}.`);
+      const { data } = await firstValueFrom(
+        this.httpService.get<BrasilApiResponseDTO>(
+          `https://brasilapi.com.br/api/cep/v1/${cep}`,
+        ),
+      );
+      // TODO: Tratar erros de retorno da api
+      return this.mapToAddress(data);
+    } catch (error) {
+      console.log('There was an error finding cep...');
+      if (!this.next) throw error;
+      return this.next.find(cep);
+    }
+  }
+
+  getName(): string {
+    return 'Brasil Cep';
   }
 
   private mapToAddress(response: BrasilApiResponseDTO): Address {
