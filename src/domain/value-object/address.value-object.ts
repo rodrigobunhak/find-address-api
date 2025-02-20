@@ -1,5 +1,5 @@
+import { InvalidUFError } from '../errors/domain.error';
 import { Cep } from './cep.value-object';
-import { InvalidUFError } from './errors/domain.error';
 
 type CreateAddressProperties = {
   cep: string;
@@ -24,14 +24,7 @@ export class Address {
     if (!Address.isValidUF(props.uf)) {
       throw new InvalidUFError(props.uf);
     }
-    return new Address(
-      Cep.create(props.cep),
-      props.uf.toLocaleUpperCase(),
-      props.state,
-      props.city,
-      props.neighborhood,
-      props.street,
-    );
+    return new Address(Cep.create(props.cep), props.uf.toLocaleUpperCase(), props.state, props.city, props.neighborhood, props.street);
   }
 
   get cep(): string {

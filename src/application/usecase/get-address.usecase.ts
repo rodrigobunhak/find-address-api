@@ -1,22 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Inject, Injectable } from '@nestjs/common';
 import { AddressFinderOrchestrator } from 'src/infra/address-finders-orchestrator';
 import { Result } from '@badrap/result';
-import { Cep } from 'src/domain/cep.value-object';
-
-interface inputDto {
-  cep: string;
-}
-
-interface outputDto {
-  cep: string;
-  uf: string;
-  state: string;
-  city: string;
-  neighborhood: string;
-  street: string;
-}
+import { GetAddressInput, GetAddressOutput } from '../dto/get-address.dto';
+import { Cep } from 'src/domain/value-object/cep.value-object';
 
 @Injectable()
 export class GetAddressUseCase {
@@ -25,11 +11,10 @@ export class GetAddressUseCase {
     private readonly finder: AddressFinderOrchestrator,
   ) {}
 
-  async execute(input: inputDto): Promise<Result<outputDto>> {
+  async execute(input: GetAddressInput): Promise<Result<GetAddressOutput>> {
     try {
       const cep = Cep.create(input.cep);
       const output = await this.finder.executeFind(cep.value);
-      console.log(output.toJSON());
       return Result.ok(output);
     } catch (error) {
       return Result.err(error);

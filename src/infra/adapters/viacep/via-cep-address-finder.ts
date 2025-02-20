@@ -3,25 +3,9 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Optional } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AddressFinder } from 'src/domain/address-finder.provider';
-import { Address } from 'src/domain/address.value-object';
+import { Address } from 'src/domain/value-object/address.value-object';
 import { CepNotFoundError } from 'src/infra/errors/infra.error';
-
-export interface ViaCepResponseDTO {
-  cep?: string;
-  logradouro?: string;
-  complemento?: string;
-  unidade?: string;
-  bairro?: string;
-  localidade?: string;
-  uf?: string;
-  estado?: string;
-  regiao?: string;
-  ibge?: string;
-  gia?: string;
-  ddd?: string;
-  siafi?: string;
-  erro?: boolean;
-}
+import { ViaCepResponseDTO } from './via-cep-address-finder.dto';
 
 @Injectable()
 export class ViaCepAddressFinder implements AddressFinder {
@@ -37,11 +21,7 @@ export class ViaCepAddressFinder implements AddressFinder {
 
   async find(cep: string): Promise<Address> {
     try {
-      const { data } = await firstValueFrom(
-        this.httpService.get<ViaCepResponseDTO>(
-          `https://viacep.com.br/ws/${cep}/json/`,
-        ),
-      );
+      const { data } = await firstValueFrom(this.httpService.get<ViaCepResponseDTO>(`https://viacep.com.br/ws/${cep}/json/`));
       if (data.erro) {
         throw new Error();
       }

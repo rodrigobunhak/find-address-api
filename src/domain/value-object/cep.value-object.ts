@@ -1,4 +1,4 @@
-import { InvalidCepError } from './errors/domain.error';
+import { InvalidCepError } from '../errors/domain.error';
 
 export class Cep {
   private constructor(private readonly _value: string) {}

@@ -1,12 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AddressFinder } from 'src/domain/address-finder.provider';
-import { Address } from 'src/domain/address.value-object';
+import { Address } from 'src/domain/value-object/address.value-object';
 
 @Injectable()
 export class AddressFinderOrchestrator {
-  constructor(
-    @Inject('AddressFinders') private readonly finders: AddressFinder[],
-  ) {}
+  constructor(@Inject('AddressFinders') private readonly finders: AddressFinder[]) {}
 
   private shuffleFinders(): AddressFinder[] {
     return [...this.finders].sort(() => Math.random() - 0.5);

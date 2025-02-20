@@ -1,4 +1,4 @@
-import { Address } from './address.value-object';
+import { Address } from './value-object/address.value-object';
 
 export interface AddressFinder {
   next?: AddressFinder;

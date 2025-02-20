@@ -29,7 +29,17 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      'max-len': [
+        'error',
+        {
+          code: 150, // Define o comprimento máximo da linha
+          ignoreComments: true, // Ignora comentários
+          ignoreStrings: true, // Ignora strings
+          ignoreTemplateLiterals: true, // Ignora template literals
+          ignoreRegExpLiterals: true, // Ignora literais de expressões regulares
+        },
+      ],
     },
   },
 );
