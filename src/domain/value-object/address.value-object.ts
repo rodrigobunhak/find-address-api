@@ -27,8 +27,8 @@ export class Address {
     return new Address(Cep.create(props.cep), props.uf.toLocaleUpperCase(), props.state, props.city, props.neighborhood, props.street);
   }
 
-  get cep(): string {
-    return this._cep.value;
+  get cep(): Cep {
+    return this._cep;
   }
 
   get uf(): string {
@@ -84,12 +84,11 @@ export class Address {
     return validUFs.includes(uf.toUpperCase());
   }
 
-  // TODO: fazer comparação completa de objeto
-  equals(other: Address): boolean {
-    return this._cep.value === other._cep.value;
+  public toString(): string {
+    return `${this.street}, ${this.neighborhood}, ${this.city}, ${this.state}, ${this.uf}, CEP ${this.cep.toString()}`;
   }
 
-  toJSON() {
+  public toJSON() {
     return {
       cep: this._cep,
       uf: this._uf,

@@ -14,6 +14,11 @@ export class Cep {
     return this._value;
   }
 
+  public toString(): string {
+    const cleanCep = this._value.replace(/\D/g, '');
+    return `${cleanCep.slice(0, 5)}-${cleanCep.slice(5)}`;
+  }
+
   private static isValidCep(cep: string): boolean {
     const cepRegex = /^\d{5}-?\d{3}$/;
     if (!cepRegex.test(cep)) {
@@ -24,7 +29,6 @@ export class Cep {
   }
 
   private static formatCep(cep: string): string {
-    const cleanCep = cep.replace(/\D/g, '');
-    return `${cleanCep.slice(0, 5)}-${cleanCep.slice(5)}`;
+    return cep.replace(/\D/g, '');
   }
 }

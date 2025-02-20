@@ -9,4 +9,5 @@ export interface GetAddressOutput {
   city: string;
   neighborhood: string;
   street: string;
+  fullAddress: string;
 }

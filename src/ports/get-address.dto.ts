@@ -11,4 +11,5 @@ export class GetAddressOutputDto implements GetAddressOutput {
   city: string;
   neighborhood: string;
   street: string;
+  fullAddress: string;
 }
