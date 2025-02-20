@@ -1,3 +1,6 @@
+import { Cep } from './cep.value-object';
+import { InvalidUFError } from './errors/domain.error';
+
 type CreateAddressProperties = {
   cep: string;
   uf: string;
@@ -9,7 +12,7 @@ type CreateAddressProperties = {
 
 export class Address {
   private constructor(
-    private readonly _cep: string,
+    private readonly _cep: Cep,
     private readonly _uf: string,
     private readonly _state: string,
     private readonly _city: string,
@@ -18,16 +21,11 @@ export class Address {
   ) {}
 
   static create(props: CreateAddressProperties): Address {
-    if (!Address.isValidCep(props.cep)) {
-      throw new Error('CEP inválido'); // TODO: Criar um erro no dominio
-    }
-
     if (!Address.isValidUF(props.uf)) {
-      throw new Error('UF inválida'); // TODO: Criar um erro no dominio
+      throw new InvalidUFError(props.uf);
     }
-
     return new Address(
-      Address.formatCep(props.cep),
+      Cep.create(props.cep),
       props.uf.toLocaleUpperCase(),
       props.state,
       props.city,
@@ -37,7 +35,7 @@ export class Address {
   }
 
   get cep(): string {
-    return this._cep;
+    return this._cep.value;
   }
 
   get uf(): string {
@@ -58,11 +56,6 @@ export class Address {
 
   get street(): string {
     return this._street;
-  }
-
-  private static isValidCep(cep: string): boolean {
-    const cepRegex = /^\d{5}-?\d{3}$/;
-    return cepRegex.test(cep);
   }
 
   private static isValidUF(uf: string): boolean {
@@ -98,14 +91,9 @@ export class Address {
     return validUFs.includes(uf.toUpperCase());
   }
 
-  private static formatCep(cep: string): string {
-    const cleanCep = cep.replace(/\D/g, '');
-    return `${cleanCep.slice(0, 5)}-${cleanCep.slice(5)}`;
-  }
-
   // TODO: fazer comparação completa de objeto
   equals(other: Address): boolean {
-    return this._cep === other.cep;
+    return this._cep.value === other._cep.value;
   }
 
   toJSON() {
