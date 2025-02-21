@@ -53,7 +53,7 @@ yarn install
 **4. Execute a aplicação:**
 
 ```bash
-npm run start
+npm run start:dev
 ```
 
 ou
