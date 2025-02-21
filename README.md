@@ -29,7 +29,7 @@ Esta é uma API REST desenvolvida em NestJS que alterna aleatoriamente entre dua
 **1. Clone o repositório:**
 
 ```bash
-git clone https://github.com/rodrigo.bunhak/find-address-app.git
+git clone https://github.com/rodrigo.bunhak/find-address-api.git
 ```
 
 **2. Navegue até o diretório do projeto:**
