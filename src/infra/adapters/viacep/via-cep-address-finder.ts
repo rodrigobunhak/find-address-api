@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Optional } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
@@ -20,16 +19,12 @@ export class ViaCepAddressFinder implements AddressFinder {
   }
 
   async find(cep: string): Promise<Address> {
-    try {
-      const { data } = await firstValueFrom(this.httpService.get<ViaCepResponseDTO>(`https://viacep.com.br/ws/${cep}/json/`));
-      if (data.erro) {
-        throw new Error();
-      }
+    const { data } = await firstValueFrom(this.httpService.get<ViaCepResponseDTO>(`https://viacep.com.br/ws/${cep}/json/`));
+    if (data && !data.erro) {
       return this.mapToAddress(data);
-    } catch (error) {
-      if (!this.next) throw new CepNotFoundError(cep);
-      return this.next.find(cep);
     }
+    if (!this.next) throw new CepNotFoundError(cep);
+    return this.next.find(cep);
   }
 
   private mapToAddress(response: ViaCepResponseDTO): Address {

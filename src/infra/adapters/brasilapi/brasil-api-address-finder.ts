@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Optional } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
@@ -16,13 +15,12 @@ export class BrasilApiAddressFinder implements AddressFinder {
   ) {}
 
   async find(cep: string): Promise<Address> {
-    try {
-      const { data } = await firstValueFrom(this.httpService.get<BrasilApiResponseDTO>(`https://brasilapi.com.br/api/cep/v1/${cep}`));
+    const { data } = await firstValueFrom(this.httpService.get<BrasilApiResponseDTO>(`https://brasilapi.com.br/api/cep/v1/${cep}`));
+    if (data) {
       return this.mapToAddress(data);
-    } catch (error) {
-      if (!this.next) throw new CepNotFoundError(cep);
-      return this.next.find(cep);
     }
+    if (!this.next) throw new CepNotFoundError(cep);
+    return this.next.find(cep);
   }
 
   getName(): string {

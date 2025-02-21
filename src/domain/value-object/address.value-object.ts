@@ -90,7 +90,7 @@ export class Address {
 
   public toJSON() {
     return {
-      cep: this._cep,
+      cep: this._cep.toString(),
       uf: this._uf,
       state: this._state,
       city: this._city,
