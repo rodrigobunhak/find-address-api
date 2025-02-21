@@ -22,7 +22,7 @@ export class Address {
 
   static create(props: CreateAddressProperties): Address {
     if (!Address.isValidUF(props.uf)) {
-      throw new InvalidUFError(props.uf);
+      throw new InvalidUFError();
     }
     return new Address(Cep.create(props.cep), props.uf.toLocaleUpperCase(), props.state, props.city, props.neighborhood, props.street);
   }

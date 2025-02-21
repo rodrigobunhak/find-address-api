@@ -55,24 +55,24 @@ describe('GetAddressController', () => {
 
     it('should return 400 when the CEP is invalid', async () => {
       const cep = 'Invalid CEP';
-      const invalidCepError = new InvalidCepError(cep);
+      const invalidCepError = new InvalidCepError();
       getAddressUseCase.execute.mockResolvedValue(Result.err(invalidCepError));
       const response = await request(app.getHttpServer()).get(`/cep/${cep}`).expect(400);
       expect(response.body).toEqual({
         statusCode: 400,
-        message: `${cep} is not a valid cep`,
+        message: `Cep is not valid`,
       });
       expect(getAddressUseCase.execute).toHaveBeenCalledWith({ cep });
     });
 
     it('should return 404 when the CEP is not found', async () => {
       const cep = 'CEP not found';
-      const cepNotFoundError = new CepNotFoundError(cep);
+      const cepNotFoundError = new CepNotFoundError();
       getAddressUseCase.execute.mockResolvedValue(Result.err(cepNotFoundError));
       const response = await request(app.getHttpServer()).get(`/cep/${cep}`).expect(404);
       expect(response.body).toEqual({
         statusCode: 404,
-        message: `Cep ${cep} not found`,
+        message: `Cep not found`,
       });
       expect(getAddressUseCase.execute).toHaveBeenCalledWith({ cep });
     });

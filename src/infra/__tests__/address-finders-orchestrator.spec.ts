@@ -102,11 +102,11 @@ describe('AddressFinderOrchestrator', () => {
     });
 
     it('should throw an error if all finders fail', async () => {
-      finder3.find.mockRejectedValue(new CepNotFoundError('12345-678'));
+      finder3.find.mockRejectedValue(new CepNotFoundError());
       finder2.find.mockResolvedValue(finder3.find('12345-678'));
       finder1.find.mockResolvedValue(finder2.find('12345-678'));
       jest.spyOn(orchestrator as any, 'shuffleFinders').mockReturnValue([finder1, finder2, finder3]);
-      await expect(orchestrator.executeFind('12345-678')).rejects.toThrow(new CepNotFoundError('12345-678'));
+      await expect(orchestrator.executeFind('12345-678')).rejects.toThrow(new CepNotFoundError());
       expect(finder1.find).toHaveBeenCalledWith('12345-678');
       expect(finder2.find).toHaveBeenCalledWith('12345-678');
       expect(finder3.find).toHaveBeenCalledWith('12345-678');

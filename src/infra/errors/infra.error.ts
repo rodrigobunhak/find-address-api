@@ -6,7 +6,8 @@ export abstract class InfraError extends Error {
 }
 
 export class CepNotFoundError extends InfraError {
-  constructor(cep: string) {
-    super(`Cep ${cep} not found`);
+  constructor() {
+    super(CepNotFoundError.message);
   }
+  static readonly message = 'Cep not found';
 }

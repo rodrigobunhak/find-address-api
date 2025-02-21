@@ -5,7 +5,7 @@ export class Cep {
 
   static create(cep: string): Cep {
     if (!Cep.isValidCep(cep)) {
-      throw new InvalidCepError(cep);
+      throw new InvalidCepError();
     }
     return new Cep(Cep.formatCep(cep));
   }

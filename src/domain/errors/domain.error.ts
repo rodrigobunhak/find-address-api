@@ -6,13 +6,15 @@ export abstract class DomainError extends Error {
 }
 
 export class InvalidCepError extends DomainError {
-  constructor(cep: string) {
-    super(`${cep} is not a valid cep`);
+  constructor() {
+    super(InvalidCepError.message);
   }
+  static readonly message = 'Cep is not valid';
 }
 
 export class InvalidUFError extends DomainError {
-  constructor(uf: string) {
-    super(`${uf} is not a valid UF`);
+  constructor() {
+    super(InvalidUFError.message);
   }
+  static readonly message = 'UF is not valid';
 }

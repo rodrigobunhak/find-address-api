@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Optional } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
@@ -33,7 +32,7 @@ export class ViaCepAddressFinder implements AddressFinder {
 
   private callNextFinder(cep: string): Promise<Address> {
     if (!this.next) {
-      throw new CepNotFoundError(cep);
+      throw new CepNotFoundError();
     }
     return this.next.find(cep);
   }
